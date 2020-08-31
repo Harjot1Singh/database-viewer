@@ -1,0 +1,57 @@
+.line-view {
+  height: 100%;
+  min-height: 100vh;
+  background: white;
+}
+
+.line-view .header {
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+  justify-content: space-between;
+  background: #F0EDE9;
+  padding: 1em;
+  margin-bottom: 2em;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.line-view .header h1 {
+  font-family: 'Open Gurbani Akhar Regular';
+  font-weight: normal;
+  transition: 0.125s all ease-in-out;
+  text-align: center;
+  font-size: 1.5em;
+  color: #2D2026;
+}
+
+.line-view .header h1 a:hover {
+  cursor: pointer;
+  outline: none;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+.line-view .header .buttons {
+  display: flex;
+}
+
+.line-view .header .button {
+  color: #BA3F6A;
+  font-size: 1.75em;
+  transition: 0.125s all ease-in-out;
+  padding: 0 0.7em;
+  margin: auto 0;
+}
+
+.line-view .content {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 2em;
+  height: 100%;
+  position: relative;
+}
+
+.popover-menu {
+  z-index: 10;
+}

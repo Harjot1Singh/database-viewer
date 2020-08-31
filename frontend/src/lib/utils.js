@@ -1,6 +1,6 @@
 import newGithubIssueUrl from 'new-github-issue-url'
 
-export const issueUrl = ( {
+export const getIssueUrl = ( {
   id,
   gurmukhi,
   page,
@@ -25,6 +25,8 @@ Line | ${gurmukhi}
 
 `,
 } )
+
+export const getDictionaryLink = word => `http://www.srigranth.org/servlet/gurbani.dictionary?Param=${word}`
 
 export const getPositions = () => JSON.parse( localStorage.getItem( 'positions' ) ) || {}
 

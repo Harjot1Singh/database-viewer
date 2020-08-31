@@ -1,24 +1,24 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { Component } from 'react'
-import { withRouter } from 'react-router-dom'
+import { withRouter, Link } from 'react-router-dom'
 import { string, oneOfType, number } from 'prop-types'
-import { history } from 'react-router-prop-types'
+import { history, location } from 'react-router-prop-types'
 import classNames from 'classnames'
 import { GlobalHotKeys } from 'react-hotkeys'
 import { debounce } from 'lodash'
 import { CSSTransition } from 'react-transition-group'
 
 import { PAGE_API } from '../lib/consts'
-import { issueUrl, savePosition } from '../lib/utils'
+import { savePosition } from '../lib/utils'
 
 import Loader from './Loader'
 import LinkButton from './LinkButton'
 import Error from './Error'
 import Slider from './Slider'
 
-import './SourcePage.css'
+import './SourceView.css'
 
-class SourcePage extends Component {
+class SourceView extends Component {
   lineRefs = {}
 
   navigatingTimeout = null
@@ -153,22 +153,12 @@ class SourcePage extends Component {
     this.focusLine( lines.length - 1 )
   }
 
-  onLineClick = index => {
-    const { page, nameEnglish } = this.props
-    const { lines } = this.state
-
-    const { id, gurmukhi } = lines[ index ]
-
-    window.open( issueUrl( { id, gurmukhi, page, nameEnglish } ) )
-
-    this.focusLine( index )
-  }
-
   onLineEnter = () => {
-    const { line } = this.props
+    const { location: { pathname }, history } = this.props
 
-    this.onLineClick( line )
+    history.push( `${pathname}/view` )
   }
+
 
   belowLine = () => {
     const { line } = this.props
@@ -240,9 +230,11 @@ class SourcePage extends Component {
     const { lines, err, navigating, loading } = this.state
 
     return (
-      <div className="source-page">
+      <div className="source-view">
+
         {err && <Error err={err} />}
         {loading && !( lines || err ) && <Loader />}
+
         <GlobalHotKeys keyMap={this.keyMap} handlers={this.handlers}>
           <CSSTransition
             in={!loading}
@@ -250,20 +242,23 @@ class SourcePage extends Component {
             classNames="fade"
           >
             <section className="lines">
+
               {lines && lines.map( ( { id, gurmukhi }, index ) => (
-                <span
-                  ref={ref => { this.lineRefs[ index ] = ref }}
-                  className={classNames( 'line', { focused: +line === index && !loading } )}
-                  key={id}
-                  tabIndex={0}
-                  role="button"
-                  onClick={() => this.onLineClick( index )}
-                >
-                  {gurmukhi}
-                </span>
+                <Link key={id} to={`${index}/view`}>
+                  <span
+                    ref={ref => { this.lineRefs[ index ] = ref }}
+                    className={classNames( 'line', { focused: +line === index && !loading } )}
+                    tabIndex={0}
+                    role="button"
+                  >
+                    {gurmukhi}
+                  </span>
+                </Link>
               ) )}
+
             </section>
           </CSSTransition>
+
           <section className="controls">
             <LinkButton
               className="left button"
@@ -271,6 +266,7 @@ class SourcePage extends Component {
               to={`/sources/${source}/page/${+page - 1}/line/0`}
               disabled={page <= 1}
             />
+
             <Slider
               min={1}
               max={length}
@@ -280,6 +276,7 @@ class SourcePage extends Component {
               tooltipActive={navigating}
               disabled={length === 1}
             />
+
             <LinkButton
               className="right button"
               icon="caret-right"
@@ -287,26 +284,26 @@ class SourcePage extends Component {
               disabled={page >= length}
             />
           </section>
+
         </GlobalHotKeys>
       </div>
     )
   }
 }
 
-SourcePage.propTypes = {
+SourceView.propTypes = {
   page: oneOfType( [ string, number ] ),
   source: oneOfType( [ string, number ] ).isRequired,
   length: number.isRequired,
   pageNameGurmukhi: string.isRequired,
-  nameGurmukhi: string.isRequired,
-  nameEnglish: string.isRequired,
   history: history.isRequired,
+  location: location.isRequired,
   line: number,
 }
 
-SourcePage.defaultProps = {
+SourceView.defaultProps = {
   page: 1,
   line: 0,
 }
 
-export default withRouter( SourcePage )
+export default withRouter( SourceView )
