@@ -54,6 +54,8 @@ class App extends Component {
 
     return withContexts(
       <div className="app">
+      test
+      
         <Router>
           <Switch>
 
